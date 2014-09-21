@@ -108,7 +108,7 @@ int posicaoListaEnc(tListaEnc *f, void *valor) {
             aux=aux->next;
             count++;
         }
-        if(aux==NULL)
+        if(aux==NULL && diff!=0)
             return LISTAENC_OPERACAO_ERR;
         memcpy(valor,&count, f->bytes);
         return LISTAENC_OPERACAO_OK;

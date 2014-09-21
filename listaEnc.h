@@ -8,7 +8,7 @@
 #define LISTAENC_VAZIA -1
 #define LISTAENC_CHEIA 10
 #define LISTAENC_OPERACAO_OK 0
-#define LISTAENC_OPERACAO_ERR 1
+#define LISTAENC_OPERACAO_ERR -2
 
 typedef struct{
     void *content;
