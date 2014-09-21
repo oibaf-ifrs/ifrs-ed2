@@ -111,11 +111,11 @@ main(){
                 free(aux);
                 break;
             case 4:
-                printf("Fator de carga por 'slot' da tabela: ");
+                count=0;
                 for( i=0; i < TAM; i++) {
-                    printf("[ Slot %d | Carga %d] ",i,tamanhoListaEnc(tabela[i]));
+                    count+=tamanhoListaEnc(tabela[i]);
                 }
-                printf("\n");
+                printf("Fator de carga: %.2f\n",(float)count/TAM);
                 break;
             case 5:
                 count=0;
