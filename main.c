@@ -23,10 +23,22 @@ int inserir (int pos, int n)
     return retorno;
 }
 
-int procurar (contato* info)
+int procurar (int pos, contato* info)
 {
-    int retorno, pos = posicaoListaEnc(tabela[pos],&info);
-    retorno = elementoListaEnc(tabela[pos],pos,&info);
+    int retorno=LISTAENC_OPERACAO_ERR;
+    if (vaziaListaEnc(tabela[pos])==LISTAENC_VAZIA)
+        retorno=LISTAENC_VAZIA;
+    else {
+        int count=0,tamanho=tamanhoListaEnc(tabela[pos]), diff=1;
+        tListaEncItem *aux=tabela[pos]->head;
+        while(count<tamanho && diff && aux!=NULL) {
+            diff=strcmp(info->nome,((contato*)aux->content)->nome);
+            aux=aux->next;
+            count++;
+        }
+        if(!diff)
+            retorno=count;
+    }
     return retorno;
 }
 
@@ -45,21 +57,9 @@ main(){
         tabela[i] = malloc(sizeof(tListaEnc));
         inicializaListaEnc(tabela[i],sizeof(contato));
     }
-    /*
-    valor = 1;
-    pos = hash(valor);
-    inserir(pos, valor);
-
-    valor = 10;
-    inserir( hash(valor), valor);
-
-    valor = 11;
-    pos = hash(valor);
-    inserir(pos, valor);
-    */
     
     //VARIÁVEIS AUXILIARES
-    int ler,count;
+    int ler,count,tmphash;
     contato *aux;
     //MENUS
     do {
@@ -79,18 +79,18 @@ main(){
                 fgets (aux->nome, sizeof(aux->nome), stdin);
                 printf("Informe o telefone: ");
                 fgets (aux->telefone, sizeof(aux->telefone), stdin);
-                inserirListaEnc(tabela[hash(*aux)],1,aux);
+                tmphash=hash(*aux);
+                inserirListaEnc(tabela[tmphash],1,aux);
                 break;
             case 2:
                 aux=malloc(sizeof(contato));
                 printf("Informe o nome: ");
                 fgets (aux->nome, sizeof(aux->nome), stdin);
-                printf("Informe o telefone: ");
-                fgets (aux->telefone, sizeof(aux->telefone), stdin);
-                i=posicaoListaEnc(tabela[hash(*aux)],aux);
+                tmphash=hash(*aux);
+                i=procurar(tmphash,aux);
                 free(aux);
                 if(i!=LISTAENC_OPERACAO_ERR)
-                    printf("Seu item está em tabela[%d], índice %d da lista.\n",hash(*aux),i);
+                    printf("Seu item está em tabela[%d], índice %d da lista.\n",tmphash,i);
                 else
                     printf("Seu item não foi encontrado.\n");
                 break;
@@ -98,13 +98,11 @@ main(){
                 aux=malloc(sizeof(contato));
                 printf("Informe o nome: ");
                 fgets (aux->nome, sizeof(aux->nome), stdin);
-                printf("Informe o telefone: ");
-                fgets (aux->telefone, sizeof(aux->telefone), stdin);
-                i=posicaoListaEnc(tabela[hash(*aux)],aux);
-                
+                tmphash=hash(*aux);
+                i=procurar(hash(*aux),aux);
                 if(i!=LISTAENC_OPERACAO_ERR) {
-                    printf("Seu item estava em tabela[%d], índice %d da lista.\n",hash(*aux),i);
-                    removerListaEnc(tabela[hash(*aux)],i,aux);
+                    printf("Seu item estava em tabela[%d], índice %d da lista.\n",tmphash,i);
+                    removerListaEnc(tabela[tmphash],i,aux);
                 }
                 else
                     printf("Seu item não foi encontrado.\n");
